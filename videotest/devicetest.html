@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="AgoraRTCSDK-2.0.0.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function getDevices() {
+            AgoraRTC.getDevices(function (devices) {
+                var dev_count = devices.length;
+
+                var id = devices[0].deviceId;
+            });
+        }
+        getDevices();
+    </script>
+</body>
+
+</html>
