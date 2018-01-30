@@ -7,13 +7,22 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="AgoraRTCSDK-2.0.0.js"></script>
     <title>Document</title>
+    <style>
+    .btn_test{
+        width: 125px;
+        background: chocolate;
+        color:#ffffff;
+        text-align: center;
+        cursor: pointer;
+    }
+    </style>
 </head>
 
 <body>
     <h1>麦克风测试</h1>
     <canvas class="visualizer" width="800" height="100"></canvas>
 
-    <span  id='audio_test' type="1">麦克风测试</span>
+    <span  id='audio_test' type="1" class="btn_test">麦克风测试</span>
 
     <script>
         function getDevices() {
@@ -60,8 +69,9 @@
 
                                 var biquadFilter = audioCtx.createBiquadFilter();
                                 biquadFilter.type = "lowshelf";
-                                biquadFilter.frequency.value = 1000;
-                                biquadFilter.gain.value = 25;
+                                // biquadFilter.frequency.value = 1000;
+                                // biquadFilter.frequency.setTargetAtTime(1.0,audioCtx.cur)
+                                // biquadFilter.gain.value = 25;
                                 // source.connect(biquadFilter);
                                 analyser.connect(biquadFilter);
                                 biquadFilter.connect(audioCtx.destination);
@@ -73,9 +83,11 @@
                     else {
                         console.log("getUserMedia not supported on your browser!");
                     }
+                    this.setAttribute('type','2');
                     this.innerText='停止测试';
                 }
                 else if(t==='2'){
+                    this.setAttribute('type','1');
                     this.innerText='麦克风测试';
                     audioStreamTrack.stop();
                 }
