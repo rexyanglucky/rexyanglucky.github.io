@@ -1,0 +1,52 @@
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Voice-change-O-matic</title>
+
+
+</head>
+
+<body>
+    <div class="wrapper">
+
+        <header>
+            <h1>Voice-change-O-matic</h1>
+        </header>
+
+        <canvas class="visualizer" width="800" height="100"></canvas>
+
+        <form class="controls">
+            <div>
+                <label for="voice">Voice setting</label>
+                <select id="voice" name="voice">
+                    <option value="distortion">Distortion</option>
+                    <option value="convolver">Reverb</option>
+                    <option value="biquad">Bass Boost</option>
+                    <option value="off" selected="">Off</option>
+                </select>
+            </div>
+            <div>
+                <label for="visual">Visualizer setting</label>
+                <select id="visual" name="visual">
+                    <option value="sinewave">Sinewave</option>
+                    <option value="frequencybars" selected="">Frequency bars</option>
+                    <option value="off">Off</option>
+                </select>
+            </div>
+            <div>
+                <a class="mute">Mute</a>
+            </div>
+        </form>
+
+
+    </div>
+
+   <script src="voice.js"></script>
+
+
+
+</body>
+
+</html>
