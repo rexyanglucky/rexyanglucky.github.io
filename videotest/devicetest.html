@@ -10,6 +10,11 @@
 </head>
 
 <body>
+    <h1>麦克风测试</h1>
+    <canvas class="visualizer" width="800" height="100"></canvas>
+
+    <span  id='audio_test' type="1">麦克风测试</span>
+
     <script>
         function getDevices() {
             AgoraRTC.getDevices(function (devices) {
@@ -20,37 +25,99 @@
             });
         }
         getDevices();
-        var audioCtx;
-        try {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        catch (e) {
-            console.log("Your browser does not support AudioContext!");
-        }
-        navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia || navigator.msGetUserMedia);
-        if (navigator.getUserMedia) {
-            navigator.getUserMedia(
-                {
-                    audio: true
-                },
-                function (stream) {
-                    var source = audioCtx.createMediaStreamSource(stream);
-                    var biquadFilter = audioCtx.createBiquadFilter();
-                    biquadFilter.type = "lowshelf";
-                    biquadFilter.frequency.value = 1000;
-                    biquadFilter.gain.value = 25;
-                    source.connect(biquadFilter);
-                    biquadFilter.connect(audioCtx.destination);
-                },
-                function (err) {
-                    console.log("The following gUM error occured: " + err);
-                });
-        }
-        else {
-            console.log("getUserMedia not supported on your browser!");
-        }  
+        ; (function mediaTest() {
+            var audioCtx;
+            var videoStreamTrack, audioStreamTrack;
+            var audioTestBtn = document.getElementById('audio_test'),
+                videoTestBtn = document.getElementById('video_test');
+            var analyser = audioCtx.createAnalyser();
+            analyser.minDecibels = -90;
+            analyser.maxDecibels = -10;
+            analyser.smoothingTimeConstant = 0.85;
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            catch (e) {
+                console.log("Your browser does not support AudioContext!");
+            }
+            navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia ||
+                navigator.mozGetUserMedia || navigator.msGetUserMedia);
+
+            audioTestBtn.onclick = function () {
+                var t=this.getAttribute('type');
+                if (t === '1') {
+                    if (navigator.getUserMedia) {
+                        navigator.getUserMedia(
+                            {
+                                audio: true
+                            },
+                            function (stream) {
+                                audioStreamTrack = stream.getTracks()[0];
+                                var source = audioCtx.createMediaStreamSource(stream);
+
+                                source.connect(analyser);
+
+                                var biquadFilter = audioCtx.createBiquadFilter();
+                                biquadFilter.type = "lowshelf";
+                                biquadFilter.frequency.value = 1000;
+                                biquadFilter.gain.value = 25;
+                                // source.connect(biquadFilter);
+                                analyser.connect(biquadFilter);
+                                biquadFilter.connect(audioCtx.destination);
+                            },
+                            function (err) {
+                                console.log("The following gUM error occured: " + err);
+                            });
+                    }
+                    else {
+                        console.log("getUserMedia not supported on your browser!");
+                    }
+                    this.innerText='停止测试';
+                }
+                else if(t==='2'){
+                    this.innerText='麦克风测试';
+                    audioStreamTrack.stop();
+                }
+            }
+            function visualize() {
+                var canvas = document.querySelector('.visualizer');
+                var canvasCtx = canvas.getContext("2d");
+                var WIDTH = canvas.width, HEIGHT = canvas.height;
+                var drawVisual;
+                analyser.fftSize = 256;
+                var bufferLengthAlt = analyser.frequencyBinCount;
+                console.log(bufferLengthAlt);
+                var dataArrayAlt = new Uint8Array(bufferLengthAlt);
+
+                canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+
+                var drawAlt = function () {
+                    drawVisual = requestAnimationFrame(drawAlt);
+
+                    analyser.getByteFrequencyData(dataArrayAlt);
+
+                    canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+                    canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+
+                    var barWidth = (WIDTH / bufferLengthAlt) * 2.5;
+                    var barHeight;
+                    var x = 0;
+
+                    for (var i = 0; i < bufferLengthAlt; i++) {
+                        barHeight = dataArrayAlt[i];
+                        console.log(barHeight);
+                        canvasCtx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
+                        canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight / 2);
+
+                        x += barWidth + 1;
+                    }
+                };
+
+                drawAlt();
+            }
+        })();
     </script>
+
 </body>
 
 </html>
