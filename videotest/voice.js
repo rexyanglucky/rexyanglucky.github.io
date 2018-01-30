@@ -136,7 +136,6 @@ function visualize() {
         var dataArray = new Uint8Array(bufferLength);
 
         canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-
         var draw = function () {
             console.log('draw');
             drawVisual = requestAnimationFrame(draw);
@@ -196,7 +195,7 @@ function visualize() {
 
             for (var i = 0; i < bufferLengthAlt; i++) {
                 barHeight = dataArrayAlt[i];
-
+                console.log(barHeight);
                 canvasCtx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
                 canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight / 2);
 
