@@ -75,6 +75,7 @@
                                 // source.connect(biquadFilter);
                                 analyser.connect(biquadFilter);
                                 biquadFilter.connect(audioCtx.destination);
+                                visualize();
                             },
                             function (err) {
                                 console.log("The following gUM error occured: " + err);
