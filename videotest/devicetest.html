@@ -153,7 +153,8 @@
                     if (navigator.getUserMedia) {
                         navigator.getUserMedia(
                             {
-                                audio: true
+                                audio: false,
+                                video: { width: 1280, height: 720 }
                             },
                             function (stream) {
                                 videoStreamTrack = stream.getTracks()[0];
@@ -161,15 +162,16 @@
 
                                 video.src = window.URL.createObjectURL(stream);
                                 video.onloadedmetadata = function (e) {
+                                    video.play();
                                     // Do something with the video here.
-                                    audioResult.innerText = '摄像头设备测试通过';
-                                    audioResult.className = 'pass';
+                                    videoResult.innerText = '摄像头设备测试通过';
+                                    videoResult.className = 'pass';
                                 };
                             },
                             function (err) {
                                 console.log("The following gUM error occured: " + err);
-                                audioResult.innerText = '摄像头设备异常';
-                                audioResult.className = 'err';
+                                videoResult.innerText = '摄像头设备异常';
+                                videoResult.className = 'err';
                             });
                     }
                     else {
