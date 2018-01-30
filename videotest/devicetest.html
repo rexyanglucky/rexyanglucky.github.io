@@ -30,16 +30,17 @@
             var videoStreamTrack, audioStreamTrack;
             var audioTestBtn = document.getElementById('audio_test'),
                 videoTestBtn = document.getElementById('video_test');
-            var analyser = audioCtx.createAnalyser();
-            analyser.minDecibels = -90;
-            analyser.maxDecibels = -10;
-            analyser.smoothingTimeConstant = 0.85;
+           
             try {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
             catch (e) {
                 console.log("Your browser does not support AudioContext!");
             }
+            var analyser = audioCtx.createAnalyser();
+            analyser.minDecibels = -90;
+            analyser.maxDecibels = -10;
+            analyser.smoothingTimeConstant = 0.85;
             navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia ||
                 navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
