@@ -314,8 +314,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var signal = new SignalingClient(appid, appcert);
         var rtc = new RtcClient(appid);
         var client = new Client(signal, rtc, localAccount);
-        var channelName = remoteAccount + Math.random() * 10000 + "";
-
+        // let channelName = remoteAccount + Math.random() * 10000 + "";
+        var channelName = 'room_test_interview';
         //by default call btn is disabled
 
         signal.login(localAccount).done(function (_) {
