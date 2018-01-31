@@ -202,7 +202,11 @@ var SignalingClient = function () {
                     return "Peer is busy.";
             }
         }
-
+    }, {
+        key: 'broadcastMessage',
+        value: function broadcastMessage(text) {
+            this.channel && this.channel.messageChannelSend(text);
+        }
         //session events delegate
 
     }, {
@@ -231,6 +235,13 @@ var SignalingClient = function () {
             Logger.log('call.onInviteEndByPeer ' + extra);
             if (this.onInviteEndByPeer !== null) {
                 this.onInviteEndByPeer();
+            }
+        }
+    }, {
+        key: '_onMessageChannelReceive',
+        value: function _onMessageChannelReceive(account, uid, msg) {
+            if (this.onMessageChannelReceive && this.localAccount !== account) {
+                this.onMessageChannelReceive(this.channel.name, msg);
             }
         }
     }]);
