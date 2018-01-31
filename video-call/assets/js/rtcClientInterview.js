@@ -18,7 +18,7 @@ var RtcClient = function () {
         this.published = false;
         this.muted = false;
 
-        this.subscribeWindowResizeEvent();
+        // this.subscribeWindowResizeEvent();
         this.subscribeStreamEvents();
     }
 
