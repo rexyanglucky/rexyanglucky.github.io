@@ -112,11 +112,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 key: 'onReceiveMessage',
                 value: function onReceiveMessage(account, msg, type) {
                     var client = this;
-                    var conversations = this.chats.filter(function (item) {
-                        return item.account === account;
-                    });
-
-                    var chatMsgContainer = $(".chat-messages");
+                    var chatMsgContainer = $(".chat-warp");
                     chatMsgContainer.append(client.buildMsg(msg, false, msg_item.ts));
                     chatMsgContainer.scrollTop(chatMsgContainer[0].scrollHeight);
                 }
