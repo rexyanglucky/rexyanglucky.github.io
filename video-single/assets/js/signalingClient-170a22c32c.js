@@ -49,6 +49,7 @@ var SignalingClient = function () {
             });
 
             session.onMessageInstantReceive = $.proxy(this._onMessageInstantReceive, this);
+            session.onInviteReceived = $.proxy(this._onInviteReceived, this);
             this.session = session;
             this.localAccount = account;
 
@@ -123,6 +124,42 @@ var SignalingClient = function () {
         value: function _onMessageChannelReceive(account, uid, msg) {
             if (this.onMessageChannelReceive && this.localAccount !== account) {
                 this.onMessageChannelReceive(this.channel.name, msg);
+            }
+        }
+
+        /**
+         * 发起呼叫
+         * @param {string} channelName  频道名
+         * @param {string} peer         对方的账号
+         * @param {json} extra          本次呼叫的其他信息，最大为 8K 字节可见字符。必须为 JSON 格式。如：
+        {“_require_peer_online”:1} 如用户不在线，则触发 onInviteFailed 回调
+        {“_require_peer_online”:0} 对用户是否在线没有要求（默认）
+         */
+
+    }, {
+        key: 'channelInviteUser2',
+        value: function channelInviteUser2(channelName, peer, extra) {
+            session.channelInviteUser2(channelName, peer, JSON.stringify({ hi: 'from web' }));
+        }
+
+        /**
+         * 接受呼叫
+         * @param {json} extra 
+         */
+
+    }, {
+        key: 'channelInviteAccept',
+        value: function channelInviteAccept(extra) {}
+        /**
+         * 收到呼叫
+         * @param {*} call 
+         */
+
+    }, {
+        key: '_onInviteReceived',
+        value: function _onInviteReceived(call) {
+            if (this.onInviteReceived) {
+                this.onInviteReceived();
             }
         }
     }]);

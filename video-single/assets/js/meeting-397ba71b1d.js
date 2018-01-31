@@ -63,11 +63,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         html += "<li name=\"" + this.chats[i].id + "\" type=\"" + this.chats[i].type + "\" account=\"" + this.chats[i].account + "\">";
                         html += "<div class=\"title\">" + this.chats[i].account + "</div>";
                         html += "<div class=\"desc\">" + this.chats[i].type + "</div>";
+                        html += '<span class="call">发起呼叫</span>';
                         html += "</li>";
                     }
                     chatsContainer.html(html);
 
-                    $(".chat-history li").off("click").on("click", function () {
+                    $(".chat-history li").off("click").on("click", function (event) {
+                        if ($(this).hasClass('call')) {
+                            var p = $(this).parent();
+                            var _mid = p.attr("name");
+                            var _type = p.attr("type");
+                            var _account = p.attr("account");
+                            client.signal.channelInviteUser2('testcall', _mid, JSON.stringify({ hi: 'from web' }));
+                            return;
+                        }
+
                         var mid = $(this).attr("name");
                         var type = $(this).attr("type");
                         var account = $(this).attr("account");
@@ -145,6 +155,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                             $(".detail .nav").html(conversation[0].account + ("(" + peerStatus + ")"));
                         });
                     } else {
+                        var _ref2 = ['io.agora.signal.channel_query_userlist', conversation[0].account],
+                            _query = _ref2[0],
+                            _account2 = _ref2[1];
+
+                        var _peerStatus = void 0;
+                        client.invoke(_query, { name: _account2 }, function (err, val) {
+                            console.log(val);
+                        });
+
                         $(".detail .nav").html(conversation[0].account);
                     }
                 }
@@ -271,7 +290,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     $(".logout-btn").off("click").on("click", function () {
                         signal.logout();
                     });
-
+                    $('.detail').off('click').on('click', '#reviceCall', function () {
+                        signal.channelInviteAccept();
+                    });
                     $(':radio[name="type"]').change(function () {
                         var type = $(this).filter(':checked').val();
                         var field = $(".conversation-target-field");
@@ -287,6 +308,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                     signal.onMessageInstantReceive = $.proxy(this.onMessageInstantReceive, this);
                     signal.onMessageChannelReceive = $.proxy(this.onMessageChannelReceive, this);
+                    signal.onInviteReceived = $.proxy(this.onInviteReceived, this);
                 }
             }, {
                 key: "onMessageInstantReceive",
@@ -297,6 +319,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 key: "onMessageChannelReceive",
                 value: function onMessageChannelReceive(account, msg) {
                     this.onReceiveMessage(account, msg, "channel");
+                }
+            }, {
+                key: "onInviteReceived",
+                value: function onInviteReceived(call) {
+                    alert('revice');
+                    console.log(call);
+                    var rbtn = document.getElementById('reviceCall');
+                    rbtn.style.display = 'inline';
                 }
             }, {
                 key: "onReceiveMessage",
