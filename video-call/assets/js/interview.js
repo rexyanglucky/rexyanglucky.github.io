@@ -279,10 +279,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         dialog.hide();
                         $(".startCallBtn").hide();
                         _this2.ringCalled(false);
-                        signal.acceptCall(call).done(function (call) {
-                            rtc.init(call.channelName, true);
-                        }).catch(function (err) {
-                            Logger.log('Accept call failed: ' + err);
+                        signal.leave().done(function () {
+                            signal.acceptCall(call).done(function (call) {
+                                rtc.init(call.channelName, true);
+                            }).catch(function (err) {
+                                Logger.log('Accept call failed: ' + err);
+                            });
                         });
                     });
 
