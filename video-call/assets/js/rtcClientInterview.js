@@ -193,8 +193,8 @@ var RtcClient = function () {
                 this.displayStream($(".media_warp"), localStream, "fullscreen");
             } else if (remoteStreams.length === 1) {
                 this.displayStream($(".media_warp"), remoteStreams[0].stream, "fullscreen");
+                this.displayStream($(".media_warp"), localStream, "side");
             }
-            this.displayStream($(".media_warp"), localStream, "side");
         }
 
         //utils
@@ -240,15 +240,22 @@ var RtcClient = function () {
             if (mode === "fullscreen") {
                 var size = this.calculateStreamSize();
 
+                // $("#" + stream.getId()).css({
+                //     width: `${size.width}px`,
+                //     height: `${size.height}px`
+                // });
                 $("#" + stream.getId()).css({
-                    width: size.width + 'px',
-                    height: size.height + 'px'
+                    width: '100%',
+                    height: '100%'
                 });
             } else {
                 $("#" + stream.getId()).removeClass("side_stream").addClass("side_stream");
                 $("#" + stream.getId()).css({
                     width: '160px',
-                    height: '120px'
+                    height: '120px',
+                    position: 'absolute',
+                    top: 0,
+                    right: 0
                 });
             }
             stream.play(stream.getId());
