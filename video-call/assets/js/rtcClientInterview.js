@@ -190,11 +190,11 @@ var RtcClient = function () {
             Logger.log('Rearranging streams, local:' + localStream.getId() + ', remote: ' + (remoteStreams.length === 0 ? "NONE" : remoteStreams[0].id));
 
             if (remoteStreams.length === 0) {
-                this.displayStream($("#media-container"), localStream, "fullscreen");
+                this.displayStream($("#media_warp"), localStream, "fullscreen");
             } else if (remoteStreams.length === 1) {
-                this.displayStream($("#media-container"), remoteStreams[0].stream, "fullscreen");
-                // this.displayStream($("#media-container"), localStream, "side");
+                this.displayStream($("#media_warp"), remoteStreams[0].stream, "fullscreen");
             }
+            this.displayStream($("#media_warp"), localStream, "side");
         }
 
         //utils
@@ -245,7 +245,7 @@ var RtcClient = function () {
                     height: size.height + 'px'
                 });
             } else {
-                $("#" + stream.getId()).removeClass("side-stream").addClass("side-stream");
+                $("#" + stream.getId()).removeClass("side_stream").addClass("side_stream");
                 $("#" + stream.getId()).css({
                     width: '160px',
                     height: '120px'
