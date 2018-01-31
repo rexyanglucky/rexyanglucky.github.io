@@ -28,14 +28,103 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 this.signal.onInviteReceived = $.proxy(this.onInviteReceived, this);
                 this.signal.onInviteEndByPeer = $.proxy(this.onInviteEndByPeer, this);
+                this.signal.onMessageChannelReceive = $.proxy(this.onMessageChannelReceive, this);
 
                 this.subscribeEvents();
             }
 
-            //return a promise resolves a remote account name
-
-
             _createClass(Client, [{
+                key: 'sendMessage',
+                value: function sendMessage(text) {
+                    if (!text.trim()) return false; // empty
+
+                    var chatMsgContainer = $(".chart_warp");
+                    var msg_item = { ts: new Date(), text: text, account: account };
+                    chatMsgContainer.append(this.buildMsg(text, true, msg_item.ts));
+                    chatMsgContainer.scrollTop(chatMsgContainer[0].scrollHeight);
+                    this.signal.broadcastMessage(JSON.stringify(msg_item));
+                }
+            }, {
+                key: 'buildMsg',
+                value: function buildMsg(msg, me, ts) {
+                    var html = "";
+                    var timeStr = this.compareByLastMoment(ts);
+                    if (timeStr) {
+                        html += '<div>' + timeStr + '</div>';
+                    }
+                    var className = me ? "message right clearfix" : "message clearfix";
+                    html += "<li class=\"" + className + "\">";
+                    html += "<img src=\"https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/1_copy.jpg\">";
+                    html += "<div class=\"bubble\">" + Utils.safe_tags_replace(msg) + "<div class=\"corner\"></div>";
+                    html += "<span>" + this.parseTwitterDate(ts) + "</span></div></li>";
+
+                    return html;
+                }
+            }, {
+                key: 'parseTwitterDate',
+                value: function parseTwitterDate(tdate) {
+                    var system_date = new Date(Date.parse(tdate));
+                    var user_date = new Date();
+                    // if (K.ie) {
+                    //     system_date = Date.parse(tdate.replace(/( \+)/, ' UTC$1'))
+                    // }
+                    var diff = Math.floor((user_date - system_date) / 1000);
+                    if (diff <= 1) {
+                        return "just now";
+                    }
+                    if (diff < 20) {
+                        return diff + " seconds ago";
+                    }
+                    if (diff < 40) {
+                        return "half a minute ago";
+                    }
+                    if (diff < 60) {
+                        return "less than a minute ago";
+                    }
+                    if (diff <= 90) {
+                        return "one minute ago";
+                    }
+                    if (diff <= 3540) {
+                        return Math.round(diff / 60) + " minutes ago";
+                    }
+                    if (diff <= 5400) {
+                        return "1 hour ago";
+                    }
+                    if (diff <= 86400) {
+                        return Math.round(diff / 3600) + " hours ago";
+                    }
+                    if (diff <= 129600) {
+                        return "1 day ago";
+                    }
+                    if (diff < 604800) {
+                        return Math.round(diff / 86400) + " days ago";
+                    }
+                    if (diff <= 777600) {
+                        return "1 week ago";
+                    }
+                    return "on " + system_date;
+                }
+            }, {
+                key: 'onMessageChannelReceive',
+                value: function onMessageChannelReceive(account, msg) {
+                    this.onReceiveMessage(account, msg, "channel");
+                }
+            }, {
+                key: 'onReceiveMessage',
+                value: function onReceiveMessage(account, msg, type) {
+                    var client = this;
+                    var conversations = this.chats.filter(function (item) {
+                        return item.account === account;
+                    });
+
+                    var chatMsgContainer = $(".chat-messages");
+                    chatMsgContainer.append(client.buildMsg(msg, false, msg_item.ts));
+                    chatMsgContainer.scrollTop(chatMsgContainer[0].scrollHeight);
+                }
+
+                //return a promise resolves a remote account name
+
+            }, {
                 key: 'requestRemoteAccount',
                 value: function requestRemoteAccount() {
                     var deferred = $.Deferred();
@@ -58,7 +147,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     var signal = this.signal;
 
                     signal.call(channelName, account, requirePeerOnline).done(function (_) {
-                        dialog.modal('hide');
+                        dialog.hide();
+                        $('.op_warp').hide();
                         deferred.resolve();
                     }).catch($.proxy(function (err) {
                         Message.show(err.reason);
@@ -78,8 +168,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     var rtc = this.rtc;
                     var btn = $(".toolbar .muteBtn");
 
-                    $(".startCallBtn").show();
-
+                    $('.op_warp').show();
                     rtc.muted = true;
                     btn.removeClass("btn-info").addClass("btn-secondary");
                     btn.find("i").html("mic");
@@ -157,6 +246,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                             }
                         }, _this));
                     }, this));
+
+                    $('#message_to_send').off("keydown").on("keydown", function (e) {
+                        if (e.keyCode == 13) {
+                            e.preventDefault();
+                            client.sendMessage($(this).val());
+                            $(this).val("");
+                        }
+                    });
+                    $('#btn_send_msg').off('click').on('click', function () {
+                        client.sendMessage($(this).val());
+                        $('#message_to_send').val("");
+                    });
                 }
 
                 //delegate callback when receiving call
