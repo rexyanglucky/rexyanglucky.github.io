@@ -232,17 +232,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                             //start calling via signal
                             if (remoteAccount !== "") {
                                 _this.ringCalling(true);
-                                signal.leave().done(function () {
-                                    var _this2 = this;
-
-                                    $.when(rtc.init(channelName, false), this.call(channelName, remoteAccount, true)).done($.proxy(function (stream, _) {
-                                        _this2.ringCalling(false);
-                                        _this2.rtc.rtc.publish(stream);
-                                    }, this)).catch($.proxy(function (_) {
-                                        _this2.ringCalling(false);
-                                        _this2.endCall(signal.call_active || signal.call_holding, false);
-                                    }, this));
-                                });
+                                $.when(rtc.init(channelName, false), _this.call(channelName, remoteAccount, true)).done($.proxy(function (stream, _) {
+                                    _this.ringCalling(false);
+                                    _this.rtc.rtc.publish(stream);
+                                }, _this)).catch($.proxy(function (_) {
+                                    _this.ringCalling(false);
+                                    _this.endCall(signal.call_active || signal.call_holding, false);
+                                }, _this));
                             }
                         }, _this));
                     }, this));
@@ -265,7 +261,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }, {
                 key: 'onInviteReceived',
                 value: function onInviteReceived(call) {
-                    var _this3 = this;
+                    var _this2 = this;
 
                     var dialog = $(".calledModal");
                     var signal = this.signal;
@@ -275,20 +271,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     dialog.find(".declineBtn").off("click").on("click", function (e) {
                         // dialog.modal('hide');
                         dialog.hide();
-                        _this3.ringCalled(false);
+                        _this2.ringCalled(false);
                         signal.rejectCall(call, 0);
                     });
 
                     dialog.find(".acceptBtn").off("click").on("click", function (e) {
                         dialog.hide();
                         $(".startCallBtn").hide();
-                        _this3.ringCalled(false);
-                        signal.leave().done(function () {
-                            signal.acceptCall(call).done(function (call) {
-                                rtc.init(call.channelName, true);
-                            }).catch(function (err) {
-                                Logger.log('Accept call failed: ' + err);
-                            });
+                        _this2.ringCalled(false);
+                        signal.acceptCall(call).done(function (call) {
+                            rtc.init(call.channelName, true);
+                        }).catch(function (err) {
+                            Logger.log('Accept call failed: ' + err);
                         });
                     });
 
@@ -327,7 +321,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         signal.login(localAccount).done(function (_) {
             //once logged in, enable the call btn
             $("#btn_send_call").css('background', 'cadetblue');
-            signal.join('room_test_interview');
+            signal.join('room_test_interview', 2);
         });
     });
 })(jQuery);

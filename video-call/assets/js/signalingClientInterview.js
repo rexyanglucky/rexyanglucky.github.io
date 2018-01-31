@@ -14,7 +14,7 @@ var SignalingClient = function () {
         this.channel = null;
         this.appid = appid;
         this.uid = null;
-
+        this.channelMsg = null;
         this.onInviteReceived = null;
         this.onInviteEndByPeer = null;
         this.onMessageChannelReceive = null;
@@ -118,10 +118,13 @@ var SignalingClient = function () {
                 Logger.log('channel.onChannelJoinFailed ' + ecode);
                 deferred.reject(ecode);
             };
-            // if (type&&type === 2) {
-            channel.onMessageChannelReceive = $.proxy(this._onMessageChannelReceive, this);
-            // }
-            this.channel = channel;
+
+            if (type && type === 2) {
+                channel.onMessageChannelReceive = $.proxy(this._onMessageChannelReceive, this);
+                this.channelMsg = channel;
+            } else {
+                this.channel = channel;
+            }
 
             return deferred.promise();
         }
@@ -208,7 +211,7 @@ var SignalingClient = function () {
     }, {
         key: 'broadcastMessage',
         value: function broadcastMessage(text) {
-            this.channel && this.channel.messageChannelSend(text);
+            this.channelMsg && this.channelMsg.messageChannelSend(text);
         }
 
         //session events delegate
@@ -245,7 +248,7 @@ var SignalingClient = function () {
         key: '_onMessageChannelReceive',
         value: function _onMessageChannelReceive(account, uid, msg) {
             if (this.onMessageChannelReceive && this.localAccount !== account) {
-                this.onMessageChannelReceive(this.channel.name, msg);
+                this.onMessageChannelReceive(this.channelMsg.name, msg);
             }
         }
     }]);
