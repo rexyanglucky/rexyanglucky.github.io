@@ -151,16 +151,19 @@ var SignalingClient = function () {
             var deferred = $.Deferred();
             this.call_active = this.call_holding;
             this.call_holding = null;
-
-            this.join(call.channelName).done(function (_) {
-                call.channelInviteAccept();
-                deferred.resolve({
-                    peer: call.peer,
-                    channelName: call.channelName
+            if (this.channel) {
+                this.channel.channelSetAttr('name', call.channelName, function () {});
+            } else {
+                this.join(call.channelName).done(function (_) {
+                    call.channelInviteAccept();
+                    deferred.resolve({
+                        peer: call.peer,
+                        channelName: call.channelName
+                    });
+                }).catch(function (err) {
+                    deferred.reject(err);
                 });
-            }).catch(function (err) {
-                deferred.reject(err);
-            });
+            }
 
             return deferred.promise();
         }
