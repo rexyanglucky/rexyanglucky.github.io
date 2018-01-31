@@ -255,7 +255,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         }
                     });
                     $('#btn_send_msg').off('click').on('click', function () {
-                        client.sendMessage($(this).val());
+                        client.sendMessage($('#message_to_send').val());
                         $('#message_to_send').val("");
                     });
                 }
