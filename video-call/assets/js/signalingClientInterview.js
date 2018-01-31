@@ -153,6 +153,7 @@ var SignalingClient = function () {
             this.call_holding = null;
             if (this.channel) {
                 this.channel.channelSetAttr('name', call.channelName, function () {});
+                call.channelInviteAccept();
             } else {
                 this.join(call.channelName).done(function (_) {
                     call.channelInviteAccept();
