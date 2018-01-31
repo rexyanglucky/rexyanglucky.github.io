@@ -37,9 +37,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 key: 'sendMessage',
                 value: function sendMessage(text) {
                     if (!text.trim()) return false; // empty
-
                     var chatMsgContainer = $(".chart_warp");
-                    var msg_item = { ts: new Date(), text: text, account: account };
+                    var msg_item = { ts: new Date(), text: text, account: this.localAccount };
                     chatMsgContainer.append(this.buildMsg(text, true, msg_item.ts));
                     chatMsgContainer.scrollTop(chatMsgContainer[0].scrollHeight);
                     this.signal.broadcastMessage(JSON.stringify(msg_item));
