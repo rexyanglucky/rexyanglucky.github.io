@@ -69,7 +69,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     chatsContainer.html(html);
 
                     $(".chat-history li").off("click").on("click", function (event) {
-                        if ($(this).hasClass('call')) {
+                        var target = event.target;
+                        if (target.className === 'call') {
                             var p = $(this).parent();
                             var _mid = p.attr("name");
                             var _type = p.attr("type");
