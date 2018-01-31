@@ -193,7 +193,7 @@ var RtcClient = function () {
                 this.displayStream($("#media-container"), localStream, "fullscreen");
             } else if (remoteStreams.length === 1) {
                 this.displayStream($("#media-container"), remoteStreams[0].stream, "fullscreen");
-                // this.displayStream($("#media-container"), localStream, "side");
+                this.displayStream($("#media-container"), localStream, "side");
             }
         }
 
