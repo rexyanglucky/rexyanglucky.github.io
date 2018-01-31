@@ -112,7 +112,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 key: 'onReceiveMessage',
                 value: function onReceiveMessage(account, msg, type) {
                     var client = this;
-                    var chatMsgContainer = $(".chat-warp");
+                    var chatMsgContainer = $(".chart_warp");
                     chatMsgContainer.append(client.buildMsg(msg, false, new Date()));
                     chatMsgContainer.scrollTop(chatMsgContainer[0].scrollHeight);
                 }
