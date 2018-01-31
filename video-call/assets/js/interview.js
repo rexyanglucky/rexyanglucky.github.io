@@ -113,7 +113,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 value: function onReceiveMessage(account, msg, type) {
                     var client = this;
                     var chatMsgContainer = $(".chart_warp");
-                    chatMsgContainer.append(client.buildMsg(msg, false, new Date()));
+                    chatMsgContainer.append(client.buildMsg(msg.text, false, new Date()));
                     chatMsgContainer.scrollTop(chatMsgContainer[0].scrollHeight);
                 }
 
@@ -320,6 +320,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         signal.login(localAccount).done(function (_) {
             //once logged in, enable the call btn
             $("#btn_send_call").css('background', 'cadetblue');
+            signal.join('room_test_interview');
         });
     });
 })(jQuery);

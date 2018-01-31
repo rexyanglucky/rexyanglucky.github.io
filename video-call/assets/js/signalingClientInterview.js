@@ -27,6 +27,7 @@ var SignalingClient = function () {
 
             var deferred = $.Deferred();
             var appid = this.appid;
+            this.localAccount = account;
             Logger.log('Logging in ' + account);
             //starts login
             var session = this.signal.login(account, "_no_need_token");
