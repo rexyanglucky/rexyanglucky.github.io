@@ -47,7 +47,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 key: 'buildMsg',
                 value: function buildMsg(msg, me, ts) {
                     var html = "";
-                    var timeStr = this.compareByLastMoment(ts);
+                    var timeStr = ts.toString();
                     if (timeStr) {
                         html += '<div>' + timeStr + '</div>';
                     }
