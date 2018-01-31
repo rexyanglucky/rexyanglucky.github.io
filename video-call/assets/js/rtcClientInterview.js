@@ -190,11 +190,11 @@ var RtcClient = function () {
             Logger.log('Rearranging streams, local:' + localStream.getId() + ', remote: ' + (remoteStreams.length === 0 ? "NONE" : remoteStreams[0].id));
 
             if (remoteStreams.length === 0) {
-                this.displayStream($("#media_warp"), localStream, "fullscreen");
+                this.displayStream($(".media_warp"), localStream, "fullscreen");
             } else if (remoteStreams.length === 1) {
-                this.displayStream($("#media_warp"), remoteStreams[0].stream, "fullscreen");
+                this.displayStream($(".media_warp"), remoteStreams[0].stream, "fullscreen");
             }
-            this.displayStream($("#media_warp"), localStream, "side");
+            this.displayStream($(".media_warp"), localStream, "side");
         }
 
         //utils
