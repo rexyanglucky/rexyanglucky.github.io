@@ -14,10 +14,9 @@ var SignalingClient = function () {
         this.channel = null;
         this.appid = appid;
         this.uid = null;
-        this.channelMsg = null;
+
         this.onInviteReceived = null;
         this.onInviteEndByPeer = null;
-        this.onMessageChannelReceive = null;
     }
 
     _createClass(SignalingClient, [{
@@ -27,7 +26,6 @@ var SignalingClient = function () {
 
             var deferred = $.Deferred();
             var appid = this.appid;
-            this.localAccount = account;
             Logger.log('Logging in ' + account);
             //starts login
             var session = this.signal.login(account, "_no_need_token");
@@ -118,13 +116,9 @@ var SignalingClient = function () {
                 Logger.log('channel.onChannelJoinFailed ' + ecode);
                 deferred.reject(ecode);
             };
-
-            if (type && type === 2) {
-                channel.onMessageChannelReceive = $.proxy(this._onMessageChannelReceive, this);
-                this.channelMsg = channel;
-            } else {
-                this.channel = channel;
-            }
+            // if(typ)
+            channel.onMessageChannelReceive = $.proxy(this._onMessageChannelReceive, this);
+            this.channel = channel;
 
             return deferred.promise();
         }
@@ -208,11 +202,6 @@ var SignalingClient = function () {
                     return "Peer is busy.";
             }
         }
-    }, {
-        key: 'broadcastMessage',
-        value: function broadcastMessage(text) {
-            this.channelMsg && this.channelMsg.messageChannelSend(text);
-        }
 
         //session events delegate
 
@@ -242,13 +231,6 @@ var SignalingClient = function () {
             Logger.log('call.onInviteEndByPeer ' + extra);
             if (this.onInviteEndByPeer !== null) {
                 this.onInviteEndByPeer();
-            }
-        }
-    }, {
-        key: '_onMessageChannelReceive',
-        value: function _onMessageChannelReceive(account, uid, msg) {
-            if (this.onMessageChannelReceive && this.localAccount !== account) {
-                this.onMessageChannelReceive(this.channelMsg.name, msg);
             }
         }
     }]);

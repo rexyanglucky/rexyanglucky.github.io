@@ -322,6 +322,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             //once logged in, enable the call btn
             $("#btn_send_call").css('background', 'cadetblue');
             signal.join('room_test_interview', 2);
+            // signal.join(channelName);
         });
     });
 })(jQuery);
