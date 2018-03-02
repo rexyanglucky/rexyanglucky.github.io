@@ -9,11 +9,12 @@ var RtcClient = function () {
         _classCallCheck(this, RtcClient);
 
         this.appid = appid;
-        this.rtc = AgoraRTC.createClient({ mode: 'interop' });
+        // this.rtc = AgoraRTC.createClient({ mode: 'interop' });
+        this.rtc = AgoraRTC.createClient({ mode: 'h264_interop' });
         this.localStream = null;
         this.uid = null;
         this.remoteStreams = [];
-        this.videoProfile = "720p_6";
+        this.videoProfile = "480P_1";
         this.dynamicKey = null;
         this.published = false;
         this.muted = false;
